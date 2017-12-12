@@ -1,0 +1,51 @@
+---
+- name: Deploy Grails application into Ubuntu Server
+  hosts: vagrantbox
+  connection: ssh
+  become: true
+  environment:
+    JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
+
+  vars:
+    ansible_ssh_user: vagrant 
+
+  vars_files:
+    - vars/vault.yml
+    - vars/general.yml
+
+  pre_tasks:
+    - name: Create working directory
+      file:
+        path: ./docker
+        state: directory
+
+    - name: Create Dockerfile
+      template:
+        src: ./templates/Dockerfile.j2
+        dest: ./docker/Dockerfile
+
+    - name: Check if packages are installed
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - openjdk-8-jdk
+        - git
+
+    - name: Fetch application from GitHub
+      git:
+        repo: https://github.com/secretescapes/grails-petclinic 
+        dest: "docker/{{ grail_dir }}" 
+        version: master
+
+    - name: Build application
+      shell: ./grailsw war
+      args:
+        chdir: "./docker/{{ grail_dir }}"
+
+
+  roles:
+    - role: docker-install
+    - role: docker-build-and-run
+...

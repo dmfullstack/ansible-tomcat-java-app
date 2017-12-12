@@ -1,0 +1,25 @@
+---
+# tasks file for docker-build-and-run
+- name: Install PIP
+  apt:
+    name: python-pip
+    state: latest
+
+- name: Install docker-py
+  pip:
+    name: docker-py 
+
+- name: Build Docker image
+  docker_image:
+    name: "{{ image_name }}"
+    path: "{{ path_to_dockerfile }}"
+    state: present
+
+- name: Run Docker container
+  docker_container:
+    name: "{{ container_name }}" 
+    image: "{{ image_name }}"
+    state: started
+    published_ports:
+      - 8080:8080
+...

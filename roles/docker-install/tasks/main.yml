@@ -1,0 +1,28 @@
+---
+# Install Docker CE
+- name: add the GPG key for the official Docker repository to the system
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+- name: Add the Docker repository to APT sources
+  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+- name: update apt packages
+  shell: apt-get update
+  ignore_errors: true
+
+- name: Install from the Docker repo instead of the default Ubuntu
+  shell: apt-cache policy docker-ce
+
+- name: install from the Docker repo instead of the default Ubuntu
+  shell: apt-cache policy docker-ce
+
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: latest
+
+- name: Start Docker Daemon
+  service:
+    name: docker
+    state: started  
+...
