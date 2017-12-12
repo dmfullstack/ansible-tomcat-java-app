@@ -1,4 +1,4 @@
-# Secret Escape - Technical Test
+# SE - Test
 
 Create a automated deployment process that take a Grails application from source and deploys it to a Ubuntu server.
 
